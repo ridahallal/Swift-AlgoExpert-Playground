@@ -22,6 +22,7 @@ class Node
     }
     
     //Depth First Search
+    //O(v + e) time | O(v) space
     func depthFirstSearch(array: inout [String]) -> [String]
     {
         array.append(self.name)
