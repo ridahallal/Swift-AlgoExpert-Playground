@@ -70,9 +70,22 @@ test5.children[4].addChild(name: "S").addChild(name: "T").addChild(name: "U").ad
 test5.children[4].children[0].addChild(name: "W").addChild(name: "X")
 test5.children[4].children[0].children[1].addChild(name: "Y").addChild(name: "Z")
 
-var arr = [String]()
-let abdc = ["A", "B", "D", "C"]
-print(abdc)
-let hello = test1.depthFirstSearch(array: &arr)
-print(hello)
-assert(hello == abdc)
+//Test 1
+var arrayToReturn = [String]()
+assert(test1.depthFirstSearch(array: &arrayToReturn) == ["A", "B", "D", "C"])
+
+//Test 2
+arrayToReturn = [String]()
+assert(test2.depthFirstSearch(array: &arrayToReturn) == ["A", "B", "C", "F", "D", "E"])
+
+//Test 3
+arrayToReturn = [String]()
+assert(test3.depthFirstSearch(array: &arrayToReturn) == ["A", "B", "C", "D", "F", "E"])
+
+//Test 4
+arrayToReturn = [String]()
+assert(test4.depthFirstSearch(array: &arrayToReturn) == ["A", "B", "E", "F", "I", "J", "C", "D", "G", "K", "H"])
+
+//Test 5
+arrayToReturn = [String]()
+assert(test5.depthFirstSearch(array: &arrayToReturn) == ["A", "B", "E", "Q", "R", "F", "I", "J", "O", "C", "P", "D", "G", "K", "H", "L", "M", "S", "W", "X", "Y", "Z", "T", "U", "V"])
