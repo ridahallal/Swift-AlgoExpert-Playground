@@ -19,6 +19,36 @@ class DoublyLinkedList
     var head: Node?
     var tail: Node?
     
+    init()
+    {
+        self.head = nil
+        self.tail = nil
+    }
+    
+    func containsNodeWithValue(value: Int) -> Bool
+    {
+        if var node = self.head
+        {
+            while node.value != value
+            {
+                if let next = node.next
+                {
+                    node = next
+                }
+                else
+                {
+                    return false
+                }
+            }
+            
+            return true
+        }
+        else
+        {
+            return false
+        }
+    }
+    
     func setHead(node: Node)
     {
         
@@ -50,11 +80,6 @@ class DoublyLinkedList
     }
     
     func remove(node: Node)
-    {
-        
-    }
-    
-    func containsNodeWithValue(value: Int)
     {
         
     }
