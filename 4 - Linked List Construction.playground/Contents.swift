@@ -38,48 +38,35 @@ class DoublyLinkedList
     //Checks if Linked List contains node with value
     func containsNodeWithValue(value: Int) -> Bool
     {
-        //If head exists, set a node variable
-        if var node = self.head
+        var node = self.head
+        
+        //Start a while loop that checks that node variable's value against the desired value
+        while node != nil, node?.value != value
         {
-            //Start a while loop that checks that node variable's value against the desired value
-            while node.value != value
+            //Jump to the next node if it exists
+            if let next = node?.next
             {
-                //Jump to the next node if it exists
-                if let next = node.next
-                {
-                    node = next
-                }
-                //Return false if we've reached the end of the list
-                else
-                {
-                    return false
-                }
+                node = next
             }
-            
-            //Return true if we exit the while loop
-            return true
         }
-        //If head doesn't exist
-        else
-        {
-            //Return false
-            return false
-        }
+        
+        //Return true if we exit the while loop
+        return true
     }
     
     //Removes Node from Linked List
     func remove(node: Node)
     {
         //If the node passed in to this function is equal to the head (we want to remove the head), we set the head to the next node
-        if var head = self.head, let next = head.next, node == head
+        if node == self.head
         {
-            head = next
+            self.head = self.head?.next
         }
         
         //If the node passed in to this function is equal to the tail (we want to remove the tail), we set the tail to the previous node
-        if var tail = self.tail, let previous = tail.previous, node == tail
+        if node == self.tail
         {
-            tail = previous
+            self.tail = self.tail?.previous
         }
         
         //Remove node bindings
@@ -108,6 +95,22 @@ class DoublyLinkedList
         node.next = nil
     }
     
+    func removeNodesWithValue(value: Int)
+    {
+        var node = self.head
+        
+        while node != nil
+        {
+            let nodeToRemove = node
+            node = node?.next
+            
+            if (nodeToRemove?.value == value)
+            {
+                remove(node: nodeToRemove!)
+            }
+        }
+    }
+    
     func setHead(node: Node)
     {
         
@@ -129,11 +132,6 @@ class DoublyLinkedList
     }
     
     func insertAtPosition(position: Int, nodeToInsert: Node)
-    {
-        
-    }
-    
-    func removeNodesWithValue(value: Int)
     {
         
     }
