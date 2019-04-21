@@ -372,3 +372,32 @@ func runSecondTestCase()
 }
 
 runSecondTestCase()
+
+//Third Test Case
+func runThirdTestCase()
+{
+    let linkedList = DoublyLinkedList()
+    let firstNode = Node(value: 1)
+    let secondNode = Node(value: 2)
+    let thirdNode = Node(value: 3)
+    let fourthNode = Node(value: 4)
+    
+    linkedList.setHead(node: firstNode)
+    assert(linkedList.containsNodeWithValue(value: 1) == true)
+    linkedList.insertAfter(node: firstNode, nodeToInsert: secondNode)
+    assert(linkedList.containsNodeWithValue(value: 2) == true)
+    linkedList.insertAfter(node: secondNode, nodeToInsert: thirdNode)
+    assert(linkedList.containsNodeWithValue(value: 3) == true)
+    linkedList.insertAfter(node: thirdNode, nodeToInsert: fourthNode)
+    assert(linkedList.containsNodeWithValue(value: 4) == true)
+    linkedList.removeNodesWithValue(value: 3)
+    assert(linkedList.containsNodeWithValue(value: 3) == false)
+    linkedList.remove(node: firstNode)
+    assert(linkedList.containsNodeWithValue(value: 1) == false)
+    linkedList.removeNodesWithValue(value: 4)
+    assert(linkedList.containsNodeWithValue(value: 4) == false)
+    linkedList.remove(node: secondNode)
+    assert(linkedList.containsNodeWithValue(value: 2) == false)
+}
+
+runThirdTestCase()
