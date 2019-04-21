@@ -35,7 +35,7 @@ class DoublyLinkedList
         self.tail = nil
     }
     
-    //Checks if Linked List contains node with value
+    //Checks if Linked List contains node with value --- O(N) time | O(1) space
     func containsNodeWithValue(value: Int) -> Bool
     {
         //Traverse the Linked List
@@ -60,7 +60,7 @@ class DoublyLinkedList
         return true
     }
     
-    //Removes Node from Linked List
+    //Removes Node from Linked List --- O(1) time | O(1) space
     func remove(node: Node)
     {
         //If the node passed in to this function is equal to the head (we want to remove the head), we set the head to the next node
@@ -101,7 +101,7 @@ class DoublyLinkedList
         node.next = nil
     }
     
-    //Removes nodes having a certain value
+    //Removes nodes having a certain value --- O(N) time | O(1) space
     func removeNodesWithValue(value: Int)
     {
         //Traverse the Linked List
@@ -125,7 +125,7 @@ class DoublyLinkedList
         }
     }
     
-    //Inserts a node before a specified node
+    //Inserts a node before a specified node --- O(1) time | O(1) space
     func insertBefore(node: Node, nodeToInsert: Node)
     {
         //If our Linked List only has one node and we pass that node to the function
@@ -159,7 +159,7 @@ class DoublyLinkedList
         node.previous = nodeToInsert
     }
     
-    //Inserts a node after a specified node
+    //Inserts a node after a specified node --- O(1) time | O(1) space
     func insertAfter(node: Node, nodeToInsert: Node)
     {
         //If our Linked List only has one node and we pass that node to the function
@@ -193,7 +193,7 @@ class DoublyLinkedList
         node.next = nodeToInsert
     }
     
-    //Sets the Linked List's head
+    //Sets the Linked List's head --- O(1) time | O(1) space
     func setHead(node: Node)
     {
         //If our Linked List is empty
@@ -210,7 +210,7 @@ class DoublyLinkedList
         insertBefore(node: self.head!, nodeToInsert: node)
     }
     
-    //Sets the Linked List's tail
+    //Sets the Linked List's tail --- O(1) time | O(1) space
     func setTail(node: Node)
     {
         //If our Linked List is empty
@@ -226,7 +226,7 @@ class DoublyLinkedList
         insertAfter(node: self.tail!, nodeToInsert: node)
     }
     
-    //Inserts a node at a specified position
+    //Inserts a node at a specified position --- O(P) time | O(1) space
     func insertAtPosition(position: Int, nodeToInsert: Node)
     {
         //If the specified position is 1, just call our setHead function
