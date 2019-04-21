@@ -264,3 +264,65 @@ class DoublyLinkedList
         }
     }
 }
+
+//Tests
+
+//Asserts that the Linked List is empty
+func expectEmpty(linkedList: DoublyLinkedList)
+{
+    assert(linkedList.head == nil)
+    assert(linkedList.tail == nil)
+}
+
+//Asserts that the Linked List's head and tail are equal to given values
+func expectHeadTail(linkedList: DoublyLinkedList, head: Node, tail: Node)
+{
+    assert(linkedList.head == head)
+    assert(linkedList.tail == tail)
+}
+
+//Asserts that the Linked List contains only one node
+func expectSingleNode(linkedList: DoublyLinkedList, node: Node)
+{
+    assert(linkedList.head == node)
+    assert(linkedList.tail == node)
+}
+
+//Returns node values from head to tail
+func getNodeValuesHeadToTail(linkedList: DoublyLinkedList) -> [Int]
+{
+    var values = [Int]()
+    
+    var node = linkedList.head
+    
+    while node != nil
+    {
+        values.append(node?.value)
+        node = node?.next
+    }
+    
+    return values
+}
+
+func getNodeValuesTailToHead(linkedList: DoublyLinkedList) -> [Int]
+{
+    var values = [Int]()
+    
+    var node = linkedList.tail
+    
+    while node != nil
+    {
+        values.append(node?.value)
+        node = node?.previous
+    }
+    
+    return values
+}
+
+func removeNodes(linkedList: DoublyLinkedList, nodes: [Node])
+{
+    for node in nodes
+    {
+        linkedList.remove(node: node)
+    }
+}
