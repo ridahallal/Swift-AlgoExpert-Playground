@@ -1,5 +1,5 @@
 //Generic Node class
-class Node: Equatable
+class Node
 {
     var value: Int
     var previous: Node?
@@ -10,16 +10,6 @@ class Node: Equatable
         self.value = value
         self.previous = nil
         self.next = nil
-    }
-    
-    //Equatable protocol conformance
-    static func == (lhs: Node, rhs: Node) -> Bool
-    {
-        let equalValue = lhs.value == rhs.value
-        let equalPrevious = lhs.previous == rhs.previous
-        let equalNext = lhs.next == rhs.next
-        
-        return equalValue && equalPrevious && equalNext
     }
 }
 
@@ -64,13 +54,13 @@ class DoublyLinkedList
     func remove(node: Node)
     {
         //If the node passed in to this function is equal to the head (we want to remove the head), we set the head to the next node
-        if node == self.head
+        if node === self.head
         {
             self.head = self.head?.next
         }
         
         //If the node passed in to this function is equal to the tail (we want to remove the tail), we set the tail to the previous node
-        if node == self.tail
+        if node === self.tail
         {
             self.tail = self.tail?.previous
         }
@@ -129,7 +119,7 @@ class DoublyLinkedList
     func insertBefore(node: Node, nodeToInsert: Node)
     {
         //If our Linked List only has one node and we pass that node to the function
-        if nodeToInsert == self.head && nodeToInsert == self.tail
+        if nodeToInsert === self.head && nodeToInsert === self.tail
         {
             //Just return (no-op)
             return
@@ -163,7 +153,7 @@ class DoublyLinkedList
     func insertAfter(node: Node, nodeToInsert: Node)
     {
         //If our Linked List only has one node and we pass that node to the function
-        if nodeToInsert == self.head && nodeToInsert == self.tail
+        if nodeToInsert === self.head && nodeToInsert === self.tail
         {
             //Just return (no-op)
             return
@@ -277,15 +267,15 @@ func expectEmpty(linkedList: DoublyLinkedList)
 //Asserts that the Linked List's head and tail are equal to given values
 func expectHeadTail(linkedList: DoublyLinkedList, head: Node, tail: Node)
 {
-    assert(linkedList.head == head)
-    assert(linkedList.tail == tail)
+    assert(linkedList.head === head)
+    assert(linkedList.tail === tail)
 }
 
 //Asserts that the Linked List contains only one node
 func expectSingleNode(linkedList: DoublyLinkedList, node: Node)
 {
-    assert(linkedList.head == node)
-    assert(linkedList.tail == node)
+    assert(linkedList.head === node)
+    assert(linkedList.tail === node)
 }
 
 //Returns node values from head to tail
@@ -297,7 +287,7 @@ func getNodeValuesHeadToTail(linkedList: DoublyLinkedList) -> [Int]
     
     while node != nil
     {
-        values.append(node?.value)
+        values.append(node!.value)
         node = node?.next
     }
     
@@ -312,7 +302,7 @@ func getNodeValuesTailToHead(linkedList: DoublyLinkedList) -> [Int]
     
     while node != nil
     {
-        values.append(node?.value)
+        values.append(node!.value)
         node = node?.previous
     }
     
@@ -326,3 +316,59 @@ func removeNodes(linkedList: DoublyLinkedList, nodes: [Node])
         linkedList.remove(node: node)
     }
 }
+
+//First Test Case
+func runFirstTestCase()
+{
+    let linkedList = DoublyLinkedList()
+    let node = Node(value: 1)
+    linkedList.setHead(node: node)
+    expectSingleNode(linkedList: linkedList, node: node)
+    linkedList.remove(node: node)
+    expectEmpty(linkedList: linkedList)
+    linkedList.setTail(node: node)
+    expectSingleNode(linkedList: linkedList, node: node)
+    linkedList.removeNodesWithValue(value: 1)
+    expectEmpty(linkedList: linkedList)
+    linkedList.insertAtPosition(position: 1, nodeToInsert: node)
+    expectSingleNode(linkedList: linkedList, node: node)
+}
+
+runFirstTestCase()
+
+//Second Test Case
+func runSecondTestCase()
+{
+    let linkedList = DoublyLinkedList()
+    let firstNode = Node(value: 1)
+    let secondNode = Node(value: 2)
+    
+    let nodes = [firstNode, secondNode]
+    
+    linkedList.setHead(node: firstNode)
+    linkedList.setTail(node: secondNode)
+    
+    expectHeadTail(linkedList: linkedList, head: firstNode, tail: secondNode)
+    removeNodes(linkedList: linkedList, nodes: nodes)
+    expectEmpty(linkedList: linkedList)
+
+    linkedList.setHead(node: firstNode)
+    linkedList.insertAfter(node: firstNode, nodeToInsert: secondNode)
+
+    expectHeadTail(linkedList: linkedList, head: firstNode, tail: secondNode)
+    removeNodes(linkedList: linkedList, nodes: nodes)
+
+    linkedList.insertAtPosition(position: 1, nodeToInsert: firstNode)
+    linkedList.insertAtPosition(position: 2, nodeToInsert: secondNode)
+
+    expectHeadTail(linkedList: linkedList, head: firstNode, tail: secondNode)
+    removeNodes(linkedList: linkedList, nodes: nodes)
+
+    linkedList.insertAtPosition(position: 2, nodeToInsert: firstNode)
+    linkedList.insertAtPosition(position: 1, nodeToInsert: secondNode)
+
+    expectHeadTail(linkedList: linkedList, head: secondNode, tail: firstNode)
+    removeNodes(linkedList: linkedList, nodes: nodes)
+}
+
+runSecondTestCase()
