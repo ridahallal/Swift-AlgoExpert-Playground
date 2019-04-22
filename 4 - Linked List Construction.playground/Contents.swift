@@ -32,22 +32,14 @@ class DoublyLinkedList
         var node = self.head
         
         //Start a while loop that checks that node variable's value against the desired value
-        while node != nil, node?.value != value
+        while node !== nil, node?.value != value
         {
-            //Jump to the next node if it exists
-            if let next = node?.next
-            {
-                node = next
-            }
-            //If we've reached the tail return false
-            else
-            {
-                return false
-            }
+            //Jump to the next node
+            node = node?.next
         }
         
-        //Return true if we exit the while loop
-        return true
+        //Return if node exists
+        return node !== nil
     }
     
     //Removes Node from Linked List --- O(1) time | O(1) space
@@ -98,7 +90,7 @@ class DoublyLinkedList
         var node = self.head
         
         //Keep going until we reach the end
-        while node != nil
+        while node !== nil
         {
             //Create nodeToRemove constant and give it the value of the current node
             let nodeToRemove = node
@@ -234,14 +226,14 @@ class DoublyLinkedList
         var currentPosition = 1
         
         //Keep going until we reach the end or the desired position
-        while node != nil && currentPosition != position
+        while node !== nil && currentPosition != position
         {
             node = node?.next
             currentPosition = currentPosition + 1
         }
         
         //If there exists a node at the desired position
-        if node != nil
+        if node !== nil
         {
             //Use our insertBefore function and insert the node before that node
             insertBefore(node: node!, nodeToInsert: nodeToInsert)
@@ -260,8 +252,8 @@ class DoublyLinkedList
 //Asserts that the Linked List is empty
 func expectEmpty(linkedList: DoublyLinkedList)
 {
-    assert(linkedList.head == nil)
-    assert(linkedList.tail == nil)
+    assert(linkedList.head === nil)
+    assert(linkedList.tail === nil)
 }
 
 //Asserts that the Linked List's head and tail are equal to given values
@@ -401,3 +393,235 @@ func runThirdTestCase()
 }
 
 runThirdTestCase()
+
+//Fourth Test Case
+func runFourthTestCase()
+{
+    let linkedList = DoublyLinkedList()
+    
+    let firstNode = Node(value: 1)
+    let secondNode = Node(value: 2)
+    let thirdNode = Node(value: 3)
+    let fourthNode = Node(value: 3)
+    let fifthNode = Node(value: 3)
+    let sixthNode = Node(value: 6)
+    let seventhNode = Node(value: 7)
+    
+    linkedList.setHead(node: firstNode)
+    linkedList.insertAfter(node: firstNode, nodeToInsert: secondNode)
+    linkedList.insertAfter(node: secondNode, nodeToInsert: thirdNode)
+    linkedList.insertAfter(node: thirdNode, nodeToInsert: fourthNode)
+    linkedList.insertAfter(node: fourthNode, nodeToInsert: fifthNode)
+    linkedList.insertAfter(node: fifthNode, nodeToInsert: sixthNode)
+    linkedList.insertAfter(node: sixthNode, nodeToInsert: seventhNode)
+    
+    assert(getNodeValuesHeadToTail(linkedList: linkedList) == [1, 2, 3, 3, 3, 6, 7])
+    assert(getNodeValuesTailToHead(linkedList: linkedList) == [7, 6, 3, 3, 3, 2, 1])
+    expectHeadTail(linkedList: linkedList, head: firstNode, tail: seventhNode)
+    
+    linkedList.remove(node: secondNode)
+    
+    assert(getNodeValuesHeadToTail(linkedList: linkedList) == [1, 3, 3, 3, 6, 7])
+    assert(getNodeValuesTailToHead(linkedList: linkedList) == [7, 6, 3, 3, 3, 1])
+    expectHeadTail(linkedList: linkedList, head: firstNode, tail: seventhNode)
+    
+    linkedList.removeNodesWithValue(value: 1)
+    
+    assert(getNodeValuesHeadToTail(linkedList: linkedList) == [3, 3, 3, 6, 7])
+    assert(getNodeValuesTailToHead(linkedList: linkedList) == [7, 6, 3, 3, 3])
+    expectHeadTail(linkedList: linkedList, head: thirdNode, tail: seventhNode)
+    
+    linkedList.removeNodesWithValue(value: 3)
+    
+    assert(getNodeValuesHeadToTail(linkedList: linkedList) == [6, 7])
+    assert(getNodeValuesTailToHead(linkedList: linkedList) == [7, 6])
+    expectHeadTail(linkedList: linkedList, head: sixthNode, tail: seventhNode)
+    
+    linkedList.removeNodesWithValue(value: 7)
+    
+    assert(getNodeValuesHeadToTail(linkedList: linkedList) == [6])
+    assert(getNodeValuesTailToHead(linkedList: linkedList) == [6])
+    expectHeadTail(linkedList: linkedList, head: sixthNode, tail: sixthNode)
+}
+
+runFourthTestCase()
+
+//Fifth Test Case
+func runFifthTestCase()
+{
+    let linkedList = DoublyLinkedList()
+    
+    let firstNode = Node(value: 1)
+    let secondNode = Node(value: 2)
+    let thirdNode = Node(value: 3)
+    let fourthNode = Node(value: 4)
+    let fifthNode = Node(value: 5)
+    let sixthNode = Node(value: 6)
+    let seventhNode = Node(value: 7)
+    
+    linkedList.setHead(node: firstNode)
+    linkedList.insertAfter(node: firstNode, nodeToInsert: secondNode)
+    linkedList.insertAfter(node: secondNode, nodeToInsert: thirdNode)
+    linkedList.insertAfter(node: thirdNode, nodeToInsert: fourthNode)
+    linkedList.insertAfter(node: fourthNode, nodeToInsert: fifthNode)
+    
+    assert(getNodeValuesHeadToTail(linkedList: linkedList) == [1, 2, 3, 4, 5])
+    assert(getNodeValuesTailToHead(linkedList: linkedList) == [5, 4, 3, 2, 1])
+    expectHeadTail(linkedList: linkedList, head: firstNode, tail: fifthNode)
+    
+    linkedList.insertAfter(node: thirdNode, nodeToInsert: fifthNode)
+    
+    assert(getNodeValuesHeadToTail(linkedList: linkedList) == [1, 2, 3, 5, 4])
+    assert(getNodeValuesTailToHead(linkedList: linkedList) == [4, 5, 3, 2, 1])
+    expectHeadTail(linkedList: linkedList, head: firstNode, tail: fourthNode)
+    
+    linkedList.insertAfter(node: thirdNode, nodeToInsert: firstNode)
+    
+    assert(getNodeValuesHeadToTail(linkedList: linkedList) == [2, 3, 1, 5, 4])
+    assert(getNodeValuesTailToHead(linkedList: linkedList) == [4, 5, 1, 3, 2])
+    expectHeadTail(linkedList: linkedList, head: secondNode, tail: fourthNode)
+    
+    linkedList.insertAfter(node: fifthNode, nodeToInsert: secondNode)
+    
+    assert(getNodeValuesHeadToTail(linkedList: linkedList) == [3, 1, 5, 2, 4])
+    assert(getNodeValuesTailToHead(linkedList: linkedList) == [4, 2, 5, 1, 3])
+    expectHeadTail(linkedList: linkedList, head: thirdNode, tail: fourthNode)
+    
+    linkedList.insertAfter(node: secondNode, nodeToInsert: firstNode)
+    
+    assert(getNodeValuesHeadToTail(linkedList: linkedList) == [3, 5, 2, 1, 4])
+    assert(getNodeValuesTailToHead(linkedList: linkedList) == [4, 1, 2, 5, 3])
+    expectHeadTail(linkedList: linkedList, head: thirdNode, tail: fourthNode)
+    
+    linkedList.insertAfter(node: fourthNode, nodeToInsert: sixthNode)
+    
+    assert(getNodeValuesHeadToTail(linkedList: linkedList) == [3, 5, 2, 1, 4, 6])
+    assert(getNodeValuesTailToHead(linkedList: linkedList) == [6, 4, 1, 2, 5, 3])
+    expectHeadTail(linkedList: linkedList, head: thirdNode, tail: sixthNode)
+    
+    linkedList.insertAfter(node: secondNode, nodeToInsert: seventhNode)
+    
+    assert(getNodeValuesHeadToTail(linkedList: linkedList) == [3, 5, 2, 7, 1, 4, 6])
+    assert(getNodeValuesTailToHead(linkedList: linkedList) == [6, 4, 1, 7, 2, 5, 3])
+    expectHeadTail(linkedList: linkedList, head: thirdNode, tail: sixthNode)
+}
+
+runFifthTestCase()
+
+//Sixth Test Case
+func runSixthTestCase()
+{
+    let linkedList = DoublyLinkedList()
+    
+    let firstNode = Node(value: 1)
+    let secondNode = Node(value: 2)
+    let thirdNode = Node(value: 3)
+    let fourthNode = Node(value: 4)
+    let fifthNode = Node(value: 5)
+    let sixthNode = Node(value: 6)
+    let seventhNode = Node(value: 7)
+    
+    linkedList.setHead(node: firstNode)
+    linkedList.insertBefore(node: firstNode, nodeToInsert: secondNode)
+    linkedList.insertBefore(node: secondNode, nodeToInsert: thirdNode)
+    linkedList.insertBefore(node: thirdNode, nodeToInsert: fourthNode)
+    linkedList.insertBefore(node: fourthNode, nodeToInsert: fifthNode)
+    
+    assert(getNodeValuesHeadToTail(linkedList: linkedList) == [5, 4, 3, 2, 1])
+    assert(getNodeValuesTailToHead(linkedList: linkedList) == [1, 2, 3, 4, 5])
+    expectHeadTail(linkedList: linkedList, head: fifthNode, tail: firstNode)
+    
+    linkedList.insertBefore(node: thirdNode, nodeToInsert: firstNode)
+    
+    assert(getNodeValuesHeadToTail(linkedList: linkedList) == [5, 4, 1, 3, 2])
+    assert(getNodeValuesTailToHead(linkedList: linkedList) == [2, 3, 1, 4, 5])
+    expectHeadTail(linkedList: linkedList, head: fifthNode, tail: secondNode)
+    
+    linkedList.insertBefore(node: fifthNode, nodeToInsert: secondNode)
+    
+    assert(getNodeValuesHeadToTail(linkedList: linkedList) == [2, 5, 4, 1, 3])
+    assert(getNodeValuesTailToHead(linkedList: linkedList) == [3, 1, 4, 5, 2])
+    expectHeadTail(linkedList: linkedList, head: secondNode, tail: thirdNode)
+    
+    linkedList.insertBefore(node: fifthNode, nodeToInsert: fourthNode)
+    
+    assert(getNodeValuesHeadToTail(linkedList: linkedList) == [2, 4, 5, 1, 3])
+    assert(getNodeValuesTailToHead(linkedList: linkedList) == [3, 1, 5, 4, 2])
+    expectHeadTail(linkedList: linkedList, head: secondNode, tail: thirdNode)
+    
+    linkedList.insertBefore(node: secondNode, nodeToInsert: sixthNode)
+    
+    assert(getNodeValuesHeadToTail(linkedList: linkedList) == [6, 2, 4, 5, 1, 3])
+    assert(getNodeValuesTailToHead(linkedList: linkedList) == [3, 1, 5, 4, 2, 6])
+    expectHeadTail(linkedList: linkedList, head: sixthNode, tail: thirdNode)
+    
+    linkedList.insertBefore(node: firstNode, nodeToInsert: seventhNode)
+    
+    assert(getNodeValuesHeadToTail(linkedList: linkedList) == [6, 2, 4, 5, 7, 1, 3])
+    assert(getNodeValuesTailToHead(linkedList: linkedList) == [3, 1, 7, 5, 4, 2, 6])
+    expectHeadTail(linkedList: linkedList, head: sixthNode, tail: thirdNode)
+}
+
+runSixthTestCase()
+
+//Seventh Test Case
+func runSeventhTestCase()
+{
+    let linkedList = DoublyLinkedList()
+    
+    let firstNode = Node(value: 1)
+    let secondNode = Node(value: 2)
+    let thirdNode = Node(value: 3)
+    let fourthNode = Node(value: 4)
+    let fifthNode = Node(value: 5)
+    let sixthNode = Node(value: 6)
+    let seventhNode = Node(value: 7)
+    
+    linkedList.setHead(node: firstNode)
+    linkedList.insertAtPosition(position: 1, nodeToInsert: secondNode)
+    linkedList.insertAtPosition(position: 1, nodeToInsert: thirdNode)
+    linkedList.insertAtPosition(position: 1, nodeToInsert: fourthNode)
+    linkedList.insertAtPosition(position: 1, nodeToInsert: fifthNode)
+    
+    assert(getNodeValuesHeadToTail(linkedList: linkedList) == [5, 4, 3, 2, 1])
+    assert(getNodeValuesTailToHead(linkedList: linkedList) == [1, 2, 3, 4, 5])
+    expectHeadTail(linkedList: linkedList, head: fifthNode, tail: firstNode)
+    
+    linkedList.insertAtPosition(position: 2, nodeToInsert: firstNode)
+    
+    assert(getNodeValuesHeadToTail(linkedList: linkedList) == [5, 1, 4, 3, 2])
+    assert(getNodeValuesTailToHead(linkedList: linkedList) == [2, 3, 4, 1, 5])
+    expectHeadTail(linkedList: linkedList, head: fifthNode, tail: secondNode)
+    
+    linkedList.insertAtPosition(position: 1, nodeToInsert: secondNode)
+    
+    assert(getNodeValuesHeadToTail(linkedList: linkedList) == [2, 5, 1, 4, 3])
+    assert(getNodeValuesTailToHead(linkedList: linkedList) == [3, 4, 1, 5, 2])
+    expectHeadTail(linkedList: linkedList, head: secondNode, tail: thirdNode)
+    
+    linkedList.insertAtPosition(position: 2, nodeToInsert: fourthNode)
+    
+    assert(getNodeValuesHeadToTail(linkedList: linkedList) == [2, 4, 5, 1, 3])
+    assert(getNodeValuesTailToHead(linkedList: linkedList) == [3, 1, 5, 4, 2])
+    expectHeadTail(linkedList: linkedList, head: secondNode, tail: thirdNode)
+    
+    linkedList.insertAtPosition(position: 1, nodeToInsert: sixthNode)
+    
+    assert(getNodeValuesHeadToTail(linkedList: linkedList) == [6, 2, 4, 5, 1, 3])
+    assert(getNodeValuesTailToHead(linkedList: linkedList) == [3, 1, 5, 4, 2, 6])
+    expectHeadTail(linkedList: linkedList, head: sixthNode, tail: thirdNode)
+    
+    linkedList.insertAtPosition(position: 5, nodeToInsert: seventhNode)
+    
+    assert(getNodeValuesHeadToTail(linkedList: linkedList) == [6, 2, 4, 5, 7, 1, 3])
+    assert(getNodeValuesTailToHead(linkedList: linkedList) == [3, 1, 7, 5, 4, 2, 6])
+    expectHeadTail(linkedList: linkedList, head: sixthNode, tail: thirdNode)
+    
+    linkedList.insertAtPosition(position: 8, nodeToInsert: fourthNode)
+    
+    assert(getNodeValuesHeadToTail(linkedList: linkedList) == [6, 2, 5, 7, 1, 3, 4])
+    assert(getNodeValuesTailToHead(linkedList: linkedList) == [4, 3, 1, 7, 5, 2, 6])
+    expectHeadTail(linkedList: linkedList, head: sixthNode, tail: fourthNode)
+}
+
+runSeventhTestCase()
