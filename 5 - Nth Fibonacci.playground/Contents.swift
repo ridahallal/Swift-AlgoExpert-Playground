@@ -40,4 +40,24 @@ var memoize = [1: 0, 2: 1]
 nthFibonacciSecondSolution(fib: 5, memoize: &memoize)
 
 //Solution #3
-//
+//O(n) time | O(1) space
+func nthFibonacciThirdSolution(fib: Int) -> Int
+{
+    var lastTwo = [0, 1]
+    
+    var counter = 3
+    
+    while counter <= fib
+    {
+        let nextFib = lastTwo[0] + lastTwo[1]
+
+        lastTwo[0] = lastTwo[1]
+        lastTwo[1] = nextFib
+        
+        counter = counter + 1
+    }
+    
+    return fib > 1 ? lastTwo[1] : lastTwo[0]
+}
+
+nthFibonacciThirdSolution(fib: 5)
