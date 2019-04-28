@@ -1,4 +1,5 @@
 //Find Three Largest Numbers
+//O(n) time | O(1) space
 func findThreeLargestNumbers(array: [Int]) -> [Int]
 {
     var threeLargest: [Int?] = [nil, nil, nil]
