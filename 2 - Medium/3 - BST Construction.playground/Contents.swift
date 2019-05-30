@@ -125,10 +125,9 @@ class RecursiveBST
             //If the current node has both left and right nodes
             if let _ = left, let right = right
             {
-                print(self.value)
                 //Set the current node's value to the right node's minimum value
                 self.value = right.getMinValue()
-                print(self.value)
+                
                 //Remove that value from the right node
                 right.remove(value: self.value, parentNode: self)
             }
@@ -445,8 +444,7 @@ let recursiveBST2 = RecursiveBST(value: 10).insert(value: 15).insert(value: 11).
 
 let recursiveBST3 = RecursiveBST(value: 10).insert(value: 5).insert(value: 7).insert(value: 2).remove(value: 10, parentNode: nil)
 
-let recursiveBST4 = RecursiveBST(value: 10).insert(value: 5).insert(value: 15).insert(value: 22).insert(value: 17).insert(value: 34).insert(value: 7).insert(value: 2).insert(value: 5).insert(value: 1).insert(value: 35).insert(value: 27).insert(value: 16).insert(value: 30)
-    //.remove(value: 22, parentNode: nil).remove(value: 17, parentNode: nil)
+let recursiveBST4 = RecursiveBST(value: 10).insert(value: 5).insert(value: 15).insert(value: 22).insert(value: 17).insert(value: 34).insert(value: 7).insert(value: 2).insert(value: 5).insert(value: 1).insert(value: 35).insert(value: 27).insert(value: 16).insert(value: 30).remove(value: 22, parentNode: nil).remove(value: 17, parentNode: nil)
 
 func inOrderTraverseRecursive(tree: RecursiveBST?, array: inout [Int]) -> [Int]
 {
@@ -481,17 +479,8 @@ array = [Int]()
 assert(inOrderTraverseRecursive(tree: recursiveBST3, array: &array) == [2, 5, 7])
 
 array = [Int]()
-//print(inOrderTraverseRecursive(tree: recursiveBST4, array: &array))
+print(inOrderTraverseRecursive(tree: recursiveBST4, array: &array))
 //assert(inOrderTraverseRecursive(tree: recursiveBST4, array: &array) == [1, 2, 5, 5, 7, 10, 15, 16, 27, 30, 34, 35])
-recursiveBST4.remove(value: 22, parentNode: nil)
 
-array = [Int]()
-//print(inOrderTraverseRecursive(tree: recursiveBST4, array: &array))
-
-recursiveBST4.remove(value: 17, parentNode: nil)
-
-array = [Int]()
-//print(inOrderTraverseRecursive(tree: recursiveBST4, array: &array))
-//assert(recursiveBST4.right?.right?.value == 27)
-//print(recursiveBST4.right?.right?.left?.value)
+assert(recursiveBST4.right?.right?.value == 27)
 //assert(recursiveBST4.right?.right?.left?.value == 16)
