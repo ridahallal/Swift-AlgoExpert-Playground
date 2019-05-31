@@ -140,11 +140,11 @@ class RecursiveBST
                     //Set the current node's value to that node's value
                     self.value = left.value
                     
-                    //Set the current node's left to that node's left
-                    self.left = left.left
-                    
                     //Set the current node's right to that node's right
                     self.right = left.right
+                    
+                    //Set the current node's left to that node's left
+                    self.left = left.left
                 }
                 //If the current node has a right node
                 else if let right = right
@@ -166,12 +166,12 @@ class RecursiveBST
                 }
             }
             //If the parent's left node is equal to the current node
-            else if let parent = parentNode, var parentLeft = parent.left, parentLeft === self
+            else if let parent = parentNode, let parentLeft = parent.left, parentLeft === self
             {
                 //Set the parent's left to the current node's left if it exists
                 if let left = left
                 {
-                    parentLeft = left
+                    parent.left = left
                 }
                 //Otherwise set the parent's left to the current node's right
                 else
@@ -180,12 +180,12 @@ class RecursiveBST
                 }
             }
             //If the parent's right node is equal to the current node
-            else if let parent = parentNode, var parentRight = parentNode?.right, parentRight === self
+            else if let parent = parentNode, let parentRight = parentNode?.right, parentRight === self
             {
                 //Set the parent's left to the current node's left if it exists
                 if let left = left
                 {
-                    parentRight = left
+                    parent.right = left
                 }
                 //Otherwise set the parent's left to the current node's right
                 else
@@ -234,42 +234,40 @@ class IterativeBST
     //Worst: O(n) time | O(1) space
     func insert(value: Int) -> IterativeBST
     {
-        var currentNode = self
+        var currentNode: IterativeBST? = self
         
         while true
         {
             //If the value to insert is less than the current node's value
-            if let selfValue = self.value, value < selfValue
+            if let node = currentNode, let currentNodeValue = node.value, value < currentNodeValue
             {
-                //Check if current node has a left node
-                if let left = currentNode.left
-                {
-                    //Set current node to be equal to that left node
-                    currentNode = left
-                }
                 //If the current node doesn't have a left node
-                else
+                if node.left === nil
                 {
                     //Just set the current node's left node to a new node with the value that we want to insert and break
-                    currentNode.left = IterativeBST(value: value)
+                    node.left = IterativeBST(value: value)
                     break
+                }
+                else
+                {
+                    //Set current node to be equal to that left node
+                    currentNode = node.left
                 }
             }
             //If the value to insert is greater than the current node's value
-            else
+            else if let node = currentNode
             {
-                //Check if current node has a right node
-                if let right = currentNode.right
-                {
-                    //Set current node to be equal to that right node
-                    currentNode = right
-                }
                 //If the current node doesn't have a right node
-                else
+                if node.right === nil
                 {
                     //Just set the current node's right node to a new node with the value that we want to insert and break
-                    currentNode.right = IterativeBST(value: value)
+                    node.right = IterativeBST(value: value)
                     break
+                }
+                else
+                {
+                    //Set current node to be equal to that right node
+                    currentNode = node.right
                 }
             }
         }
@@ -312,29 +310,22 @@ class IterativeBST
     //Worst: O(n) time | O(1) space
     func remove(value: Int?, parentNode: IterativeBST?) -> IterativeBST
     {
-        let currentNode: IterativeBST? = self
+        var currentNode: IterativeBST? = self
+        var parentNode: IterativeBST? = parentNode
         
         while currentNode !== nil
         {
             //If the value we're searching for is less than the current node's value
             if let node = currentNode, let selfValue = node.value, let valueToRemove = value, valueToRemove < selfValue
             {
-                //Check if the current node has a left node
-                if let left = node.left
-                {
-                    //Call the remove function on it
-                    left.remove(value: value, parentNode: self)
-                }
+                parentNode = currentNode
+                currentNode = currentNode?.left
             }
             //If the value we're searching for is greater than the current node's value
             else if let node = currentNode, let selfValue = node.value, let valueToRemove = value, valueToRemove > selfValue
             {
-                //Check if the current node has a right node
-                if let right = node.right
-                {
-                    //Call the remove function on it
-                    right.remove(value: value, parentNode: self)
-                }
+                parentNode = currentNode
+                currentNode = currentNode?.right
             }
             //If the value we're searching for is equal than the current node's value
             else if let node = currentNode
@@ -383,12 +374,12 @@ class IterativeBST
                     }
                 }
                 //If the parent's left node is equal to the current node
-                else if let parent = parentNode, var parentLeft = parent.left, parentLeft === self
+                else if let parent = parentNode, let parentLeft = parent.left, parentLeft === self
                 {
                     //Set the parent's left to the current node's left if it exists
                     if let left = left
                     {
-                        parentLeft = left
+                        parent.left = left
                     }
                     //Otherwise set the parent's left to the current node's right
                     else
@@ -397,12 +388,12 @@ class IterativeBST
                     }
                 }
                 //If the parent's right node is equal to the current node
-                else if let parent = parentNode, var parentRight = parentNode?.right, parentRight === self
+                else if let parent = parentNode, let parentRight = parentNode?.right, parentRight === self
                 {
                     //Set the parent's left to the current node's left if it exists
                     if let left = left
                     {
-                        parentRight = left
+                        parent.right = left
                     }
                     //Otherwise set the parent's left to the current node's right
                     else
@@ -472,15 +463,61 @@ assert(recursiveBST1.contains(value: 10) == true)
 assert(recursiveBST1.contains(value: 22) == true)
 assert(recursiveBST1.contains(value: 23) == false)
 
-var array = [Int]()
-assert(inOrderTraverseRecursive(tree: recursiveBST2, array: &array) == [11, 15, 22])
+var recursiveTraversalArray = [Int]()
+assert(inOrderTraverseRecursive(tree: recursiveBST2, array: &recursiveTraversalArray) == [11, 15, 22])
 
-array = [Int]()
-assert(inOrderTraverseRecursive(tree: recursiveBST3, array: &array) == [2, 5, 7])
+recursiveTraversalArray = [Int]()
+assert(inOrderTraverseRecursive(tree: recursiveBST3, array: &recursiveTraversalArray) == [2, 5, 7])
 
-array = [Int]()
-print(inOrderTraverseRecursive(tree: recursiveBST4, array: &array))
-//assert(inOrderTraverseRecursive(tree: recursiveBST4, array: &array) == [1, 2, 5, 5, 7, 10, 15, 16, 27, 30, 34, 35])
+recursiveTraversalArray = [Int]()
+assert(inOrderTraverseRecursive(tree: recursiveBST4, array: &recursiveTraversalArray) == [1, 2, 5, 5, 7, 10, 15, 16, 27, 30, 34, 35])
 
 assert(recursiveBST4.right?.right?.value == 27)
-//assert(recursiveBST4.right?.right?.left?.value == 16)
+assert(recursiveBST4.right?.right?.left?.value == 16)
+
+//Solution #2 Tests
+let iterativeBST1 = IterativeBST(value: 10).insert(value: 5).insert(value: 15).insert(value: 5).insert(value: 2).insert(value: 14).insert(value: 22)
+
+let iterativeBST2 = IterativeBST(value: 10).insert(value: 15).insert(value: 11).insert(value: 22).remove(value: 10, parentNode: nil)
+
+let iterativeBST3 = IterativeBST(value: 10).insert(value: 5).insert(value: 7).insert(value: 2).remove(value: 10, parentNode: nil)
+
+let iterativeBST4 = IterativeBST(value: 10).insert(value: 5).insert(value: 15).insert(value: 22).insert(value: 17).insert(value: 34).insert(value: 7).insert(value: 2).insert(value: 5).insert(value: 1).insert(value: 35).insert(value: 27).insert(value: 16).insert(value: 30).remove(value: 22, parentNode: nil).remove(value: 17, parentNode: nil)
+
+func inOrderTraverseIterative(tree: IterativeBST?, array: inout [Int]) -> [Int]
+{
+    if let tree = tree, let value = tree.value
+    {
+        inOrderTraverseIterative(tree: tree.left, array: &array)
+        array.append(value)
+        inOrderTraverseIterative(tree: tree.right, array: &array)
+    }
+    
+    return array
+}
+
+assert(iterativeBST1.left?.value == 5)
+assert(iterativeBST1.right?.right?.value == 22)
+assert(iterativeBST1.right?.left?.value == 14)
+assert(iterativeBST1.left?.right?.value == 5)
+assert(iterativeBST1.left?.left?.value == 2)
+assert(iterativeBST1.left?.left?.left == nil)
+assert(iterativeBST1.right?.left?.right == nil)
+assert(iterativeBST1.contains(value: 15) == true)
+assert(iterativeBST1.contains(value: 2) == true)
+assert(iterativeBST1.contains(value: 5) == true)
+assert(iterativeBST1.contains(value: 10) == true)
+assert(iterativeBST1.contains(value: 22) == true)
+assert(iterativeBST1.contains(value: 23) == false)
+
+var iterativeTraversalArray = [Int]()
+assert(inOrderTraverseRecursive(tree: recursiveBST2, array: &iterativeTraversalArray) == [11, 15, 22])
+
+iterativeTraversalArray = [Int]()
+assert(inOrderTraverseRecursive(tree: recursiveBST3, array: &iterativeTraversalArray) == [2, 5, 7])
+
+iterativeTraversalArray = [Int]()
+assert(inOrderTraverseRecursive(tree: recursiveBST4, array: &iterativeTraversalArray) == [1, 2, 5, 5, 7, 10, 15, 16, 27, 30, 34, 35])
+
+assert(recursiveBST4.right?.right?.value == 27)
+assert(recursiveBST4.right?.right?.left?.value == 16)
