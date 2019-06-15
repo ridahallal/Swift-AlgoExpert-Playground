@@ -209,152 +209,77 @@ class IterativeBST
     }
 }
 
-//Find Closest Value In BST
-//Solution #1
-//Average: O(log(n)) time | O(log(n)) space
-//Worst: O(n) time | O(n) space
-func findClosestValueInBSTRecursive(tree: IterativeBST?, target: Int) -> Int
+//Validate BST
+//O(n) time | O(d) space
+func validateBST(tree: IterativeBST) -> Bool
 {
-    var closest = Int(Int32.max)
-    
-    return findClosestValueInBSTRecursiveHelper(tree: tree, target: target, closest: &closest)
+    var minimum = Int(Int32.min)
+    var maximum = Int(Int32.max)
+    return validateBSTHelper(tree: tree, minimum: &minimum, maximum: &maximum)
 }
 
-func findClosestValueInBSTRecursiveHelper(tree: IterativeBST?, target: Int, closest: inout Int) -> Int
+func validateBSTHelper(tree: IterativeBST?, minimum: inout Int, maximum: inout Int) -> Bool
 {
     if tree === nil
     {
-        return closest
+        return true
     }
     
-    if let tree = tree, let value = tree.value
+    if let tree = tree, let value = tree.value, value < minimum || value >= maximum
     {
-        let closestDifference = target - closest
-        let currentDifference = target - value
+        return false
+    }
+    
+    if var treeValue = tree?.value
+    {
+        let leftIsValid = validateBSTHelper(tree: tree?.left, minimum: &minimum, maximum: &treeValue)
+        let rightIsValid = validateBSTHelper(tree: tree?.right, minimum: &treeValue, maximum: &maximum)
         
-        if (closestDifference.magnitude > currentDifference.magnitude)
-        {
-            closest = value
-        }
-    }
-    
-    if let tree = tree, let value = tree.value, target < value
-    {
-        if let left = tree.left
-        {
-            return findClosestValueInBSTRecursiveHelper(tree: left, target: target, closest: &closest)
-        }
-        else
-        {
-            return closest
-        }
-    }
-    else if let tree = tree, let value = tree.value,  target > value
-    {
-        if let right = tree.right
-        {
-            return findClosestValueInBSTRecursiveHelper(tree: right, target: target, closest: &closest)
-        }
-        else
-        {
-            return closest
-        }
+        return leftIsValid && rightIsValid
     }
     else
     {
-        return closest
+        return false
     }
-}
-
-//Solution #2
-//Average: O(log(n)) time | O(1) space
-//Worst: O(n) time | O(1) space
-func findClosestValueInBSTIterative(tree: IterativeBST?, target: Int) -> Int
-{
-    var closest = Int(Int32.max)
-    
-    return findClosestValueInBSTIterativeHelper(tree: tree, target: target, closest: &closest)
-}
-
-func findClosestValueInBSTIterativeHelper(tree: IterativeBST?, target: Int, closest: inout Int) -> Int
-{
-    var currentNode = tree
-    
-    while currentNode !== nil
-    {
-        if let node = currentNode, let value = node.value
-        {
-            let closestDifference = target - closest
-            let currentDifference = target - value
-            
-            if (closestDifference.magnitude > currentDifference.magnitude)
-            {
-                closest = value
-            }
-        }
-        
-        if let node = currentNode, let value = node.value, target < value
-        {
-            currentNode = node.left
-        }
-        else if let node = currentNode, let value = node.value,  target > value
-        {
-            currentNode = node.right
-        }
-        else
-        {
-            break
-        }
-    }
-    
-    return closest
 }
 
 //Tests
-let iterativeBST = IterativeBST(value: 100).insert(value: 5).insert(value: 15).insert(value: 5).insert(value: 2).insert(value: 1).insert(value: 22).insert(value: 1).insert(value: 1).insert(value: 3).insert(value: 1).insert(value: 1).insert(value: 502).insert(value: 55000).insert(value: 204).insert(value: 205).insert(value: 207).insert(value: 206).insert(value: 208).insert(value: 203).insert(value: -51).insert(value: -403).insert(value: 1001).insert(value: 57).insert(value: 60).insert(value: 4500)
+let firstTree = IterativeBST(value: 10).insert(value: 5).insert(value: 15).insert(value: 5).insert(value: 2).insert(value: 1).insert(value: 22).insert(value: 13).insert(value: 14)
 
-//Recursive
-assert(findClosestValueInBSTRecursive(tree: iterativeBST, target: 100) == 100)
+let secondTree = IterativeBST(value: 10).insert(value: 5).insert(value: 15).insert(value: 5).insert(value: 2).insert(value: 1).insert(value: 22).insert(value: -5).insert(value: -15).insert(value: -5).insert(value: -2).insert(value: -1).insert(value: -22)
 
-assert(findClosestValueInBSTRecursive(tree: iterativeBST, target: 208) == 208)
+let thirdTree = IterativeBST(value: 10)
 
-assert(findClosestValueInBSTRecursive(tree: iterativeBST, target: 4500) == 4500)
+let fourthTree = IterativeBST(value: 10).insert(value: 5).insert(value: 15).insert(value: 5).insert(value: 2).insert(value: 1).insert(value: 22).insert(value: 500).insert(value: 1500).insert(value: 50).insert(value: 200).insert(value: 10000).insert(value: 2200)
 
-assert(findClosestValueInBSTRecursive(tree: iterativeBST, target: 4501) == 4500)
+let fifthTree = IterativeBST(value: 5000).insert(value: 5).insert(value: 15).insert(value: 5).insert(value: 2).insert(value: 1).insert(value: 22).insert(value: 1).insert(value: 1).insert(value: 3).insert(value: 1).insert(value: 1).insert(value: 502).insert(value: 55000).insert(value: 204).insert(value: 205).insert(value: 207).insert(value: 206).insert(value: 208).insert(value: 203)
 
-assert(findClosestValueInBSTRecursive(tree: iterativeBST, target: -70) == -51)
+let sixthTree = IterativeBST(value: 10).insert(value: 5).insert(value: 15).insert(value: 5).insert(value: 2).insert(value: 1).insert(value: 22)
+sixthTree.left?.right?.right = IterativeBST(value: 11)
 
-assert(findClosestValueInBSTRecursive(tree: iterativeBST, target: 2000) == 1001)
+let seventhTree = IterativeBST(value: 10).insert(value: 5).insert(value: 15).insert(value: 5).insert(value: 2).insert(value: 1).insert(value: 22).insert(value: -5).insert(value: -15).insert(value: -5).insert(value: -2).insert(value: -1).insert(value: -22)
+seventhTree.left?.left?.left?.left?.left?.left?.left = IterativeBST(value: 11)
 
-assert(findClosestValueInBSTRecursive(tree: iterativeBST, target: 6) == 5)
+let eightthTree = IterativeBST(value: 10).insert(value: 12)
+eightthTree.left = IterativeBST(value: 11)
 
-assert(findClosestValueInBSTRecursive(tree: iterativeBST, target: 30000) == 55000)
+let ninthTree = IterativeBST(value: 10).insert(value: 5).insert(value: 15).insert(value: 5).insert(value: 2).insert(value: 1).insert(value: 22).insert(value: 500).insert(value: 1500).insert(value: 50).insert(value: 200).insert(value: 10000).insert(value: 2200)
+ninthTree.right?.right?.right?.right?.right?.right = IterativeBST(value: 9999)
 
-assert(findClosestValueInBSTRecursive(tree: iterativeBST, target: -1) == 1)
+let tenthTree = IterativeBST(value: 100).insert(value: 5).insert(value: 15).insert(value: 5).insert(value: 2).insert(value: 1).insert(value: 22).insert(value: 1).insert(value: 1).insert(value: 502).insert(value: 55000).insert(value: 204).insert(value: 205).insert(value: 207).insert(value: 206).insert(value: 208).insert(value: 203)
+tenthTree.right?.left?.right?.left = IterativeBST(value: 300)
 
-assert(findClosestValueInBSTRecursive(tree: iterativeBST, target: 29751) == 55000)
+let eleventhTree = IterativeBST(value: 10).insert(value: 5).insert(value: 15)
+eleventhTree.left?.right = IterativeBST(value: 10)
 
-assert(findClosestValueInBSTRecursive(tree: iterativeBST, target: 29749) == 4500)
-
-//Iterative
-assert(findClosestValueInBSTIterative(tree: iterativeBST, target: 100) == 100)
-
-assert(findClosestValueInBSTIterative(tree: iterativeBST, target: 208) == 208)
-
-assert(findClosestValueInBSTIterative(tree: iterativeBST, target: 4500) == 4500)
-
-assert(findClosestValueInBSTIterative(tree: iterativeBST, target: 4501) == 4500)
-
-assert(findClosestValueInBSTIterative(tree: iterativeBST, target: -70) == -51)
-
-assert(findClosestValueInBSTIterative(tree: iterativeBST, target: 2000) == 1001)
-
-assert(findClosestValueInBSTIterative(tree: iterativeBST, target: 6) == 5)
-
-assert(findClosestValueInBSTIterative(tree: iterativeBST, target: 30000) == 55000)
-
-assert(findClosestValueInBSTIterative(tree: iterativeBST, target: -1) == 1)
-
-assert(findClosestValueInBSTIterative(tree: iterativeBST, target: 29751) == 55000)
-
-assert(findClosestValueInBSTIterative(tree: iterativeBST, target: 29749) == 4500)
+assert(validateBST(tree: firstTree) == true)
+assert(validateBST(tree: secondTree) == true)
+assert(validateBST(tree: thirdTree) == true)
+assert(validateBST(tree: fourthTree) == true)
+assert(validateBST(tree: fifthTree) == true)
+assert(validateBST(tree: sixthTree) == false)
+assert(validateBST(tree: seventhTree) == false)
+assert(validateBST(tree: eightthTree) == false)
+assert(validateBST(tree: ninthTree) == false)
+assert(validateBST(tree: tenthTree) == false)
+assert(validateBST(tree: eleventhTree) == false)
