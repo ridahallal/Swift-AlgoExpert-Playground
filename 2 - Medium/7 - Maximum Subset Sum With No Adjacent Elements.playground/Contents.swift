@@ -1,4 +1,5 @@
 //Maximum Subset Sum With No Adjacent Elements
+//O(n) time | O(n) space
 func maximumSubsetSumWithNoAdjacentElements(array: [Int]) -> Int
 {
     if array.count == 0
