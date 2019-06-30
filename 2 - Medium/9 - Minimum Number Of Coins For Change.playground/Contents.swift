@@ -23,6 +23,7 @@ func minimumNumberOfCoinsForChange(target: Int, denominations: [Int]) -> Int
 assert(minimumNumberOfCoinsForChange(target: 0, denominations: [1, 2, 3]) == 0)
 assert(minimumNumberOfCoinsForChange(target: 3, denominations: [2, 1]) == 2)
 assert(minimumNumberOfCoinsForChange(target: 4, denominations: [1, 5, 10]) == 4)
+assert(minimumNumberOfCoinsForChange(target: 7, denominations: [1, 5, 10]) == 3)
 assert(minimumNumberOfCoinsForChange(target: 10, denominations: [1, 5, 10]) == 1)
 assert(minimumNumberOfCoinsForChange(target: 11, denominations: [1, 5, 10]) == 2)
 assert(minimumNumberOfCoinsForChange(target: 24, denominations: [1, 5, 10]) == 6)
