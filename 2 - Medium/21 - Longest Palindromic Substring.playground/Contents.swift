@@ -46,11 +46,67 @@ func isPalindrome(string: String) -> Bool
     return true
 }
 
-func longestPalindromicSubstringSecondSolution() -> String
+func longestPalindromicSubstringSecondSolution(string: String) -> String
 {
-    var longest = ""
+    var currentLongest = [0, 1]
     
-    return longest
+    for i in 0 ..< string.count
+    {
+        var oddLeftIndex = i - 1
+        var oddRightIndex = i + 1
+        let odd = getLongestPalindromeFrom(string: string, leftIndex: &oddLeftIndex, rightIndex: &oddRightIndex)
+        
+        var evenLeftIndex = i - 1
+        var evenRightIndex = i
+        let even = getLongestPalindromeFrom(string: string, leftIndex: &evenLeftIndex, rightIndex: &evenRightIndex)
+        
+        var temporaryLongest = [Int]()
+        
+        if let oddFirst = odd.first, let oddLast = odd.last, let evenFirst = even.first, let evenLast = even.last
+        {
+            if oddLast - oddFirst > evenLast - evenFirst
+            {
+                temporaryLongest = odd
+            }
+            else
+            {
+                temporaryLongest = even
+            }
+        }
+        
+        if let temporaryFirst = temporaryLongest.first, let temporaryLast = temporaryLongest.last, let currentFirst = currentLongest.first, let currentLast = currentLongest.last
+        {
+            if temporaryLast - temporaryFirst > currentLast - currentFirst
+            {
+                currentLongest = temporaryLongest
+            }
+        }
+    }
+    
+    let firstIndex = string.index(string.startIndex, offsetBy: currentLongest.first!)
+    let lastIndex = string.index(string.startIndex, offsetBy: currentLongest.last!)
+    let result = String(string[firstIndex ..< lastIndex])
+    
+    return result
+}
+
+func getLongestPalindromeFrom(string: String, leftIndex: inout Int, rightIndex: inout Int) -> [Int]
+{
+    while leftIndex >= 0 && rightIndex < string.count
+    {
+        let leftStringIndex = string.index(string.startIndex, offsetBy: leftIndex)
+        let rightStringIndex = string.index(string.startIndex, offsetBy: rightIndex)
+        
+        if string[leftStringIndex] != string[rightStringIndex]
+        {
+            break
+        }
+        
+        leftIndex -= 1
+        rightIndex += 1
+    }
+    
+    return [leftIndex + 1, rightIndex]
 }
 
 //Tests
@@ -66,3 +122,16 @@ assert(longestPalindromicSubstringFirstSolution(string: "abcdefggfedcba") == "ab
 assert(longestPalindromicSubstringFirstSolution(string: "zzzzzzz2345abbbba5432zzbbababa") == "zz2345abbbba5432zz")
 assert(longestPalindromicSubstringFirstSolution(string: "z234a5abbbba54a32z") == "5abbbba5")
 assert(longestPalindromicSubstringFirstSolution(string: "z234a5abbba54a32z") == "5abbba5")
+
+assert(longestPalindromicSubstringSecondSolution(string: "a") == "a")
+assert(longestPalindromicSubstringSecondSolution(string: "it's highnoon") == "noon")
+assert(longestPalindromicSubstringSecondSolution(string: "noon high it is") == "noon")
+assert(longestPalindromicSubstringSecondSolution(string: "abccbait's highnoon") == "abccba")
+assert(longestPalindromicSubstringSecondSolution(string: "abaxyzzyxf") == "xyzzyx")
+assert(longestPalindromicSubstringSecondSolution(string: "abcdefgfedcbazzzzzzzzzzzzzzzzzzzz") == "zzzzzzzzzzzzzzzzzzzz")
+assert(longestPalindromicSubstringSecondSolution(string: "abcdefgfedcba") == "abcdefgfedcba")
+assert(longestPalindromicSubstringSecondSolution(string: "abcdefghfedcbaa") == "aa")
+assert(longestPalindromicSubstringSecondSolution(string: "abcdefggfedcba") == "abcdefggfedcba")
+assert(longestPalindromicSubstringSecondSolution(string: "zzzzzzz2345abbbba5432zzbbababa") == "zz2345abbbba5432zz")
+assert(longestPalindromicSubstringSecondSolution(string: "z234a5abbbba54a32z") == "5abbbba5")
+assert(longestPalindromicSubstringSecondSolution(string: "z234a5abbba54a32z") == "5abbba5")
