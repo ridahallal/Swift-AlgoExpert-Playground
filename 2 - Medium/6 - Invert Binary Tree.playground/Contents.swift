@@ -39,7 +39,7 @@ class BinaryTree
             queue.append(current?.right)
         }
         
-        self.insert(values: values, index: index + 1)
+        insert(values: values, index: index + 1)
         
         return self
     }
