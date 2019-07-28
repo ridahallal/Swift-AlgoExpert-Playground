@@ -170,6 +170,71 @@ func buildSequence(lcs: [[(String, Int, Int, Int)]]) -> [String]
     return sequence
 }
 
+//Solution #4
+//O(nm) time | O(nm) space
+func longestCommonSubsequenceFourthSolution(firstString: String, secondString: String) -> [String]
+{
+    var lengths = [[Int]]()
+    
+    for _ in stride(from: 0, to: firstString.count + 1, by: 1)
+    {
+        let row = Array(repeating: 0, count: secondString.count + 1)
+        lengths.append(row)
+    }
+    
+    for i in stride(from: 1, to: firstString.count + 1, by: 1)
+    {
+        for j in stride(from: 1, to: secondString.count + 1, by: 1)
+        {
+            let firstIndex = firstString.index(firstString.startIndex, offsetBy: i - 1)
+            let secondIndex = secondString.index(secondString.startIndex, offsetBy: j - 1)
+            
+            if firstString[firstIndex] == secondString[secondIndex]
+            {
+                lengths[i][j] = lengths[i - 1][j - 1] + 1
+            }
+            else
+            {
+                lengths[i][j] = max(lengths[i - 1][j], lengths[i][j - 1])
+            }
+        }
+    }
+    
+    return buildSequence(lengths: lengths, string: secondString)
+}
+
+//Build lcs from lengths array and initial string
+func buildSequence(lengths: [[Int]], string: String) -> [String]
+{
+    var sequence = [String]()
+    
+    var i = lengths.count - 1
+    var j = lengths[0].count - 1
+    
+    while i != 0 && j != 0
+    {
+        if (lengths[i][j] == lengths[i - 1][j])
+        {
+            i -= 1
+        }
+        else if (lengths[i][j] == lengths[i][j - 1])
+        {
+            j -= 1
+        }
+        else
+        {
+            let index = string.index(string.startIndex, offsetBy: j - 1)
+            let char = String(string[index])
+            
+            sequence.insert(char, at: 0)
+            i -= 1
+            j -= 1
+        }
+    }
+    
+    return sequence
+}
+
 //Tests
 assert(longestCommonSubsequenceFirstSolution(firstString: "", secondString: "") == [])
 assert(longestCommonSubsequenceFirstSolution(firstString: "", secondString: "ABCDEFG") == [])
@@ -203,3 +268,14 @@ assert(longestCommonSubsequenceThirdSolution(firstString: "ZXVVYZW", secondStrin
 assert(longestCommonSubsequenceThirdSolution(firstString: "8111111111111111142", secondString: "222222222822222222222222222222433333333332") == ["8", "4", "2"])
 assert(longestCommonSubsequenceThirdSolution(firstString: "ABCDEFGHIJKLMNOPQRSTUVWXYZ", secondString: "CCCDDEGDHAGKGLWAJWKJAWGKGWJAKLGGWAFWLFFWAGJWKAG") == ["C", "D", "E", "G", "H", "J", "K", "L", "W"])
 assert(longestCommonSubsequenceThirdSolution(firstString: "ABCDEFGHIJKLMNOPQRSTUVWXYZ", secondString: "CCCDDEGDHAGKGLWAJWKJAWGKGWJAKLGGWAFWLFFWAGJWKAGTUV") == ["C", "D", "E", "G", "H", "J", "K", "L", "T", "U", "V"])
+
+assert(longestCommonSubsequenceFourthSolution(firstString: "", secondString: "") == [])
+assert(longestCommonSubsequenceFourthSolution(firstString: "", secondString: "ABCDEFG") == [])
+assert(longestCommonSubsequenceFourthSolution(firstString: "ABCDEFG", secondString: "") == [])
+assert(longestCommonSubsequenceFourthSolution(firstString: "ABCDEFG", secondString: "ABCDEFG") == ["A", "B", "C", "D", "E", "F", "G"])
+assert(longestCommonSubsequenceFourthSolution(firstString: "ABCDEFG", secondString: "APPLES") == ["A", "E"])
+assert(longestCommonSubsequenceFourthSolution(firstString: "clement", secondString: "antoine") == ["n", "t"])
+assert(longestCommonSubsequenceFourthSolution(firstString: "ZXVVYZW", secondString: "XKYKZPW") == ["X", "Y", "Z", "W"])
+assert(longestCommonSubsequenceFourthSolution(firstString: "8111111111111111142", secondString: "222222222822222222222222222222433333333332") == ["8", "4", "2"])
+assert(longestCommonSubsequenceFourthSolution(firstString: "ABCDEFGHIJKLMNOPQRSTUVWXYZ", secondString: "CCCDDEGDHAGKGLWAJWKJAWGKGWJAKLGGWAFWLFFWAGJWKAG") == ["C", "D", "E", "G", "H", "J", "K", "L", "W"])
+assert(longestCommonSubsequenceFourthSolution(firstString: "ABCDEFGHIJKLMNOPQRSTUVWXYZ", secondString: "CCCDDEGDHAGKGLWAJWKJAWGKGWJAKLGGWAFWLFFWAGJWKAGTUV") == ["C", "D", "E", "G", "H", "J", "K", "L", "T", "U", "V"])
