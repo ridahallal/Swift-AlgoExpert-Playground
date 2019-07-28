@@ -97,6 +97,79 @@ func secondSolutionHelper(_ i: Int, _ biggestString: String, _ smallestString: S
     }
 }
 
+//Solution #3
+//O(nm) time | O(nm) space
+func longestCommonSubsequenceThirdSolution(firstString: String, secondString: String) -> [String]
+{
+    //Matrix of tuples (character, count, previous x, previous y)
+    var lcs = [[(String, Int, Int, Int)]]()
+    
+    for _ in stride(from: 0, to: firstString.count + 1, by: 1)
+    {
+        var row = [(String, Int, Int, Int)]()
+        
+        for _ in stride(from: 0, to: secondString.count + 1, by: 1)
+        {
+            let tuple = ("", 0, 0, 0)
+            row.append(tuple)
+        }
+        
+        lcs.append(row)
+    }
+    
+    for i in stride(from: 1, to: firstString.count + 1, by: 1)
+    {
+        for j in stride(from: 1, to: secondString.count + 1, by: 1)
+        {
+            let firstIndex = firstString.index(firstString.startIndex, offsetBy: i - 1)
+            let secondIndex = secondString.index(secondString.startIndex, offsetBy: j - 1)
+            
+            if firstString[firstIndex] == secondString[secondIndex]
+            {
+                let char = String(firstString[firstIndex])
+                lcs[i][j] = (char, lcs[i - 1][j - 1].1 + 1, i - 1, j - 1)
+            }
+            else
+            {
+                if (lcs[i - 1][j].1 > lcs[i][j - 1].1)
+                {
+                    lcs[i][j] = ("", lcs[i - 1][j].1, i - 1, j)
+                }
+                else
+                {
+                    lcs[i][j] = ("", lcs[i][j - 1].1, i, j - 1)
+                }
+            }
+        }
+    }
+    
+    return buildSequence(lcs: lcs)
+}
+
+//Traverse our matrix and build our lcs
+func buildSequence(lcs: [[(String, Int, Int, Int)]]) -> [String]
+{
+    var sequence = [String]()
+    
+    var i = lcs.count - 1
+    var j = lcs[0].count - 1
+    
+    while i != 0 && j != 0
+    {
+        let currentEntry = lcs[i][j]
+        
+        if currentEntry.0 != ""
+        {
+            sequence.insert(currentEntry.0, at: 0)
+        }
+        
+        i = currentEntry.2
+        j = currentEntry.3
+    }
+    
+    return sequence
+}
+
 //Tests
 assert(longestCommonSubsequenceFirstSolution(firstString: "", secondString: "") == [])
 assert(longestCommonSubsequenceFirstSolution(firstString: "", secondString: "ABCDEFG") == [])
@@ -119,3 +192,14 @@ assert(longestCommonSubsequenceSecondSolution(firstString: "ZXVVYZW", secondStri
 assert(longestCommonSubsequenceSecondSolution(firstString: "8111111111111111142", secondString: "222222222822222222222222222222433333333332") == ["8", "4", "2"])
 assert(longestCommonSubsequenceSecondSolution(firstString: "ABCDEFGHIJKLMNOPQRSTUVWXYZ", secondString: "CCCDDEGDHAGKGLWAJWKJAWGKGWJAKLGGWAFWLFFWAGJWKAG") == ["C", "D", "E", "G", "H", "J", "K", "L", "W"])
 assert(longestCommonSubsequenceSecondSolution(firstString: "ABCDEFGHIJKLMNOPQRSTUVWXYZ", secondString: "CCCDDEGDHAGKGLWAJWKJAWGKGWJAKLGGWAFWLFFWAGJWKAGTUV") == ["C", "D", "E", "G", "H", "J", "K", "L", "T", "U", "V"])
+
+assert(longestCommonSubsequenceThirdSolution(firstString: "", secondString: "") == [])
+assert(longestCommonSubsequenceThirdSolution(firstString: "", secondString: "ABCDEFG") == [])
+assert(longestCommonSubsequenceThirdSolution(firstString: "ABCDEFG", secondString: "") == [])
+assert(longestCommonSubsequenceThirdSolution(firstString: "ABCDEFG", secondString: "ABCDEFG") == ["A", "B", "C", "D", "E", "F", "G"])
+assert(longestCommonSubsequenceThirdSolution(firstString: "ABCDEFG", secondString: "APPLES") == ["A", "E"])
+assert(longestCommonSubsequenceThirdSolution(firstString: "clement", secondString: "antoine") == ["n", "t"])
+assert(longestCommonSubsequenceThirdSolution(firstString: "ZXVVYZW", secondString: "XKYKZPW") == ["X", "Y", "Z", "W"])
+assert(longestCommonSubsequenceThirdSolution(firstString: "8111111111111111142", secondString: "222222222822222222222222222222433333333332") == ["8", "4", "2"])
+assert(longestCommonSubsequenceThirdSolution(firstString: "ABCDEFGHIJKLMNOPQRSTUVWXYZ", secondString: "CCCDDEGDHAGKGLWAJWKJAWGKGWJAKLGGWAFWLFFWAGJWKAG") == ["C", "D", "E", "G", "H", "J", "K", "L", "W"])
+assert(longestCommonSubsequenceThirdSolution(firstString: "ABCDEFGHIJKLMNOPQRSTUVWXYZ", secondString: "CCCDDEGDHAGKGLWAJWKJAWGKGWJAKLGGWAFWLFFWAGJWKAGTUV") == ["C", "D", "E", "G", "H", "J", "K", "L", "T", "U", "V"])
