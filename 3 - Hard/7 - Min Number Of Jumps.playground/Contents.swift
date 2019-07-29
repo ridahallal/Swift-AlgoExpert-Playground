@@ -36,14 +36,22 @@ func minNumberOfJumpsSecondSolution(array: [Int]) -> Int
     var steps = array[0]
     var maximumReach = array[0]
     
+    //For each number
     for i in 1 ..< array.count - 1
     {
+        //Update the max reach
         maximumReach = max(maximumReach, array[i] + i)
+        
+        //And take a step
         steps -= 1
         
+        //If we can't take any more steps
         if steps == 0
         {
+            //We have to take a jump
             jumps += 1
+            
+            //And update the amount of steps needed to get from where we're at to the maximum reach
             steps = maximumReach - i
         }
     }
