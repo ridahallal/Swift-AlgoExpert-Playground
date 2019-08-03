@@ -1,4 +1,4 @@
-//Topological Sort Solution #1
+//Topological Sort Solution #2
 
 //Generic Job Node class
 class JobNode
@@ -6,21 +6,17 @@ class JobNode
     //Has a job
     let job: Int
     
-    //Has prerequisites
-    var prerequisites: [JobNode]
+    //Has dependencies
+    var dependencies: [JobNode]
     
-    //Visited
-    var visited: Bool
-    
-    //Visiting
-    var visiting: Bool
+    //Number of prerequisites
+    var numberOfPrerequisites: Int
     
     init(job: Int)
     {
         self.job = job
-        self.prerequisites = [JobNode]()
-        self.visited = false
-        self.visiting = false
+        self.dependencies = [JobNode]()
+        self.numberOfPrerequisites = 0
     }
 }
 
@@ -55,17 +51,20 @@ class JobGraph
         graph[job] = jobNode
     }
     
-    //Adds a prerequisite job to a JobNode's prerequisites array
-    func addPrerequisiteToJob(job: Int, prerequisite: Int)
+    //Adds a dependency job to a JobNode's dependencies array
+    func addDependencyToJob(job: Int, dependency: Int)
     {
         //Get job node
         let jobNode = getNode(job: job)
         
-        //Get prerequisite node
-        let prerequisiteNode = getNode(job: prerequisite)
+        //Get dependency node
+        let dependencyNode = getNode(job: dependency)
         
         //Add the prerequisite to the job's prerequisites array
-        jobNode.prerequisites.append(prerequisiteNode)
+        jobNode.dependencies.append(dependencyNode)
+        
+        //Increment the depencendy node's number of prerequisites
+        dependencyNode.numberOfPrerequisites += 1
     }
     
     //Returns a node in the graph if it exists
@@ -101,9 +100,9 @@ func createJobGraph(jobs: [Int], dependencies: [[Int]]) -> JobGraph
     
     for dependency in dependencies
     {
-        let job = dependency[1]
-        let prerequisite = dependency[0]
-        jobGraph.addPrerequisiteToJob(job: job, prerequisite: prerequisite)
+        let job = dependency[0]
+        let dep = dependency[1]
+        jobGraph.addDependencyToJob(job: job, dependency: dep)
     }
     
     return jobGraph
@@ -113,56 +112,36 @@ func createJobGraph(jobs: [Int], dependencies: [[Int]]) -> JobGraph
 func getOrderedJobs(jobGraph: JobGraph) -> [Int]
 {
     var orderedJobs = [Int]()
-    var jobNodes = jobGraph.nodes
+    var nodesWithNoPrerequisites = jobGraph.nodes.filter { $0.numberOfPrerequisites == 0 }
     
-    while jobNodes.count > 0
+    while nodesWithNoPrerequisites.count > 0
     {
-        if let jobNode = jobNodes.popLast()
+        if let jobNode = nodesWithNoPrerequisites.popLast()
         {
-            //Traverse each node inside the graph and determine whether or not it contains a cycle
-            let containsCycle = depthFirstTraverse(jobNode: jobNode, orderedJobs: &orderedJobs)
+            orderedJobs.append(jobNode.job)
+            removeDependencies(jobNode: jobNode, nodesWithNoPrerequisites: &nodesWithNoPrerequisites)
+        }
+    }
+    
+    let graphHasEdges = jobGraph.nodes.filter { $0.numberOfPrerequisites > 0 }.count > 0
+    
+    return graphHasEdges ? [] : orderedJobs
+}
+
+func removeDependencies(jobNode: JobNode, nodesWithNoPrerequisites: inout [JobNode])
+{
+    while jobNode.dependencies.count > 0
+    {
+        if let dependency = jobNode.dependencies.popLast()
+        {
+            dependency.numberOfPrerequisites -= 1
             
-            //If it does contain a cycle, then we cannot return any valid order for the jobs
-            if containsCycle
+            if dependency.numberOfPrerequisites == 0
             {
-                return []
+                nodesWithNoPrerequisites.append(dependency)
             }
         }
     }
-    
-    return orderedJobs
-}
-
-func depthFirstTraverse(jobNode: JobNode, orderedJobs: inout [Int]) -> Bool
-{
-    if jobNode.visited
-    {
-        return false
-    }
-    
-    if jobNode.visiting
-    {
-        return true
-    }
-    
-    jobNode.visiting = true
-    
-    for prerequisite in jobNode.prerequisites
-    {
-        let containsCycle = depthFirstTraverse(jobNode: prerequisite, orderedJobs: &orderedJobs)
-        
-        if containsCycle
-        {
-            return true
-        }
-    }
-    
-    jobNode.visited = true
-    jobNode.visiting = false
-    
-    orderedJobs.append(jobNode.job)
-    
-    return false
 }
 
 //Tests
