@@ -1,4 +1,4 @@
-//Topological Sort
+//Topological Sort Solution #1
 
 //Generic Job Node class
 class JobNode
