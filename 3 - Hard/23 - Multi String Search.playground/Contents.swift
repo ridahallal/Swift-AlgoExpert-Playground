@@ -125,6 +125,79 @@ class ModifiedSuffixTrie
     }
 }
 
+//Solution #3
+//O(ns + bs) time | O(ns) space
+func multiStringSearchThirdSolution(_ bigString: String, _ smallStrings: [String]) -> [Bool]
+{
+    let trie = Trie()
+    
+    for string in smallStrings
+    {
+        trie.insert(string)
+    }
+    
+    var containedStrings = [String: Bool]()
+    
+    for i in 0 ..< bigString.count
+    {
+        findSmallStringInBigString(bigString, i, trie, &containedStrings)
+    }
+    
+    return smallStrings.map { containedStrings.keys.contains($0) }
+}
+
+func findSmallStringInBigString(_ string: String, _ startIndex: Int, _ trie: Trie, _ containedStrings: inout [String: Bool])
+{
+    var currentNode = trie.root
+    
+    for i in startIndex ..< string.count
+    {
+        let currentStringIndex = string.index(string.startIndex, offsetBy: i)
+        let currentCharacter = String(string[currentStringIndex])
+        
+        if !currentNode.children.keys.contains(currentCharacter)
+        {
+            break
+        }
+        
+        let nextNode = currentNode.children[currentCharacter] as! TrieNode
+        currentNode = nextNode
+        
+        if currentNode.children.keys.contains(trie.endSymbol)
+        {
+            let resultString = currentNode.children[trie.endSymbol] as! String
+            containedStrings[resultString] = true
+        }
+    }
+}
+
+class Trie
+{
+    var root = TrieNode()
+    let endSymbol = "*"
+    
+    func insert(_ string: String)
+    {
+        var node = root
+        
+        for i in 0 ..< string.count
+        {
+            let iStringIndex = string.index(string.startIndex, offsetBy: i)
+            let ithCharacter = String(string[iStringIndex])
+            
+            if !node.children.keys.contains(ithCharacter)
+            {
+                node.children[ithCharacter] = TrieNode()
+            }
+            
+            let nextNode = node.children[ithCharacter] as! TrieNode
+            node = nextNode
+        }
+        
+        node.children[endSymbol] = string
+    }
+}
+
 //Tests
 //Solution #1
 assert(multiStringSearchFirstSolution("this is a big string", ["this", "yo", "is", "a", "bigger", "string", "kappa"]) == [true, false, true, true, false, true, false])
@@ -141,6 +214,7 @@ assert(multiStringSearchFirstSolution("Is this particular test going to pass or 
 
 assert(multiStringSearchFirstSolution("Everything in this test should fail.", ["everything", "inn", "that", "testers", "shall", "failure"]) == [false, false, false, false, false, false])
 
+//Solution #2
 assert(multiStringSearchSecondSolution("this is a big string", ["this", "yo", "is", "a", "bigger", "string", "kappa"]) == [true, false, true, true, false, true, false])
 
 assert(multiStringSearchSecondSolution("Mary goes to the shopping center every week.", ["to", "Mary", "centers", "shop", "shopping", "string", "kappa"]) == [true, true, false, true, true, false, false])
@@ -154,3 +228,18 @@ assert(multiStringSearchSecondSolution("ndbajwhfawkjljkfaopwdlaawjk dawkj awjkaw
 assert(multiStringSearchSecondSolution("Is this particular test going to pass or is it going to fail? That is the question.", ["that", "the", "questions", "goes", "mountain", "passes", "passed", "going", "is"]) == [false, true, false, false, false, false, false, true, true])
 
 assert(multiStringSearchSecondSolution("Everything in this test should fail.", ["everything", "inn", "that", "testers", "shall", "failure"]) == [false, false, false, false, false, false])
+
+//Solution #3
+assert(multiStringSearchThirdSolution("this is a big string", ["this", "yo", "is", "a", "bigger", "string", "kappa"]) == [true, false, true, true, false, true, false])
+
+assert(multiStringSearchThirdSolution("Mary goes to the shopping center every week.", ["to", "Mary", "centers", "shop", "shopping", "string", "kappa"]) == [true, true, false, true, true, false, false])
+
+assert(multiStringSearchThirdSolution("adcb akfkw afnmc fkadn vkaca jdaf dacb cdba cbda", ["abcd", "acbd", "adbc", "dabc", "cbda", "cabd", "cdab"]) == [false, false, false, false, true, false, false])
+
+assert(multiStringSearchThirdSolution("test testing testings tests testers test-takers", ["tests", "testatk", "testiing", "trsatii", "test-taker", "test"]) == [true, false, false, false, true, true])
+
+assert(multiStringSearchThirdSolution("ndbajwhfawkjljkfaopwdlaawjk dawkj awjkawkfjhkawk ahjwkjad jadfljawd", ["abc", "akwbc", "awbc", "abafac", "ajjfbc", "abac", "jadfl"]) == [false, false, false, false, false, false, true])
+
+assert(multiStringSearchThirdSolution("Is this particular test going to pass or is it going to fail? That is the question.", ["that", "the", "questions", "goes", "mountain", "passes", "passed", "going", "is"]) == [false, true, false, false, false, false, false, true, true])
+
+assert(multiStringSearchThirdSolution("Everything in this test should fail.", ["everything", "inn", "that", "testers", "shall", "failure"]) == [false, false, false, false, false, false])
