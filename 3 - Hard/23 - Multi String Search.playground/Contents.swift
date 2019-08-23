@@ -1,7 +1,7 @@
 //Multi String Search
 //Solution #1
 //O(bns) time | O(n) space
-func multiStringSearch(_ bigString: String, _ smallStrings: [String]) -> [Bool]
+func multiStringSearchFirstSolution(_ bigString: String, _ smallStrings: [String]) -> [Bool]
 {
     return smallStrings.map { isInBigString($0, bigString) }
 }
@@ -54,16 +54,103 @@ func isInBigStringHelper(_ startIndex: Int, _ smallString: String, _ bigString: 
     return true
 }
 
-assert(multiStringSearch("this is a big string", ["this", "yo", "is", "a", "bigger", "string", "kappa"]) == [true, false, true, true, false, true, false])
+//Solution #2
+//O(b ^ 2 + ns) time | O(b ^ 2 + n) space
+func multiStringSearchSecondSolution(_ bigString: String, _ smallStrings: [String]) -> [Bool]
+{
+    let modifiedSuffixTrie = ModifiedSuffixTrie(string: bigString)
+    
+    return smallStrings.map { modifiedSuffixTrie.contains($0) }
+}
 
-assert(multiStringSearch("Mary goes to the shopping center every week.", ["to", "Mary", "centers", "shop", "shopping", "string", "kappa"]) == [true, true, false, true, true, false, false])
+class TrieNode
+{
+    var children: [String: Any] = [:]
+}
 
-assert(multiStringSearch("adcb akfkw afnmc fkadn vkaca jdaf dacb cdba cbda", ["abcd", "acbd", "adbc", "dabc", "cbda", "cabd", "cdab"]) == [false, false, false, false, true, false, false])
+class ModifiedSuffixTrie
+{
+    var root = TrieNode()
+    
+    init(string: String)
+    {
+        populateModifiedSuffixTrieFrom(string)
+    }
+    
+    func populateModifiedSuffixTrieFrom(_ string: String)
+    {
+        for i in 0 ..< string.count
+        {
+            insertSubstringStartingAt(i, string, root)
+        }
+    }
+    
+    func insertSubstringStartingAt(_ index: Int, _ string: String, _ root: TrieNode)
+    {
+        var node = root
+        
+        for j in index ..< string.count
+        {
+            let jStringIndex = string.index(string.startIndex, offsetBy: j)
+            let jthCharacter = String(string[jStringIndex])
+            
+            if !node.children.keys.contains(jthCharacter)
+            {
+                node.children[jthCharacter] = TrieNode()
+            }
+            
+            let nextNode = node.children[jthCharacter] as! TrieNode
+            node = nextNode
+        }
+    }
+    
+    func contains(_ string: String) -> Bool
+    {
+        var node = root
+        
+        for character in string
+        {
+            let stringifiedCharacter = String(character)
+            
+            if !node.children.keys.contains(stringifiedCharacter)
+            {
+                return false
+            }
+            
+            let nextNode = node.children[stringifiedCharacter] as! TrieNode
+            node = nextNode
+        }
+        
+        return true
+    }
+}
 
-assert(multiStringSearch("test testing testings tests testers test-takers", ["tests", "testatk", "testiing", "trsatii", "test-taker", "test"]) == [true, false, false, false, true, true])
+//Tests
+//Solution #1
+assert(multiStringSearchFirstSolution("this is a big string", ["this", "yo", "is", "a", "bigger", "string", "kappa"]) == [true, false, true, true, false, true, false])
 
-assert(multiStringSearch("ndbajwhfawkjljkfaopwdlaawjk dawkj awjkawkfjhkawk ahjwkjad jadfljawd", ["abc", "akwbc", "awbc", "abafac", "ajjfbc", "abac", "jadfl"]) == [false, false, false, false, false, false, true])
+assert(multiStringSearchFirstSolution("Mary goes to the shopping center every week.", ["to", "Mary", "centers", "shop", "shopping", "string", "kappa"]) == [true, true, false, true, true, false, false])
 
-assert(multiStringSearch("Is this particular test going to pass or is it going to fail? That is the question.", ["that", "the", "questions", "goes", "mountain", "passes", "passed", "going", "is"]) == [false, true, false, false, false, false, false, true, true])
+assert(multiStringSearchFirstSolution("adcb akfkw afnmc fkadn vkaca jdaf dacb cdba cbda", ["abcd", "acbd", "adbc", "dabc", "cbda", "cabd", "cdab"]) == [false, false, false, false, true, false, false])
 
-assert(multiStringSearch("Everything in this test should fail.", ["everything", "inn", "that", "testers", "shall", "failure"]) == [false, false, false, false, false, false])
+assert(multiStringSearchFirstSolution("test testing testings tests testers test-takers", ["tests", "testatk", "testiing", "trsatii", "test-taker", "test"]) == [true, false, false, false, true, true])
+
+assert(multiStringSearchFirstSolution("ndbajwhfawkjljkfaopwdlaawjk dawkj awjkawkfjhkawk ahjwkjad jadfljawd", ["abc", "akwbc", "awbc", "abafac", "ajjfbc", "abac", "jadfl"]) == [false, false, false, false, false, false, true])
+
+assert(multiStringSearchFirstSolution("Is this particular test going to pass or is it going to fail? That is the question.", ["that", "the", "questions", "goes", "mountain", "passes", "passed", "going", "is"]) == [false, true, false, false, false, false, false, true, true])
+
+assert(multiStringSearchFirstSolution("Everything in this test should fail.", ["everything", "inn", "that", "testers", "shall", "failure"]) == [false, false, false, false, false, false])
+
+assert(multiStringSearchSecondSolution("this is a big string", ["this", "yo", "is", "a", "bigger", "string", "kappa"]) == [true, false, true, true, false, true, false])
+
+assert(multiStringSearchSecondSolution("Mary goes to the shopping center every week.", ["to", "Mary", "centers", "shop", "shopping", "string", "kappa"]) == [true, true, false, true, true, false, false])
+
+assert(multiStringSearchSecondSolution("adcb akfkw afnmc fkadn vkaca jdaf dacb cdba cbda", ["abcd", "acbd", "adbc", "dabc", "cbda", "cabd", "cdab"]) == [false, false, false, false, true, false, false])
+
+assert(multiStringSearchSecondSolution("test testing testings tests testers test-takers", ["tests", "testatk", "testiing", "trsatii", "test-taker", "test"]) == [true, false, false, false, true, true])
+
+assert(multiStringSearchSecondSolution("ndbajwhfawkjljkfaopwdlaawjk dawkj awjkawkfjhkawk ahjwkjad jadfljawd", ["abc", "akwbc", "awbc", "abafac", "ajjfbc", "abac", "jadfl"]) == [false, false, false, false, false, false, true])
+
+assert(multiStringSearchSecondSolution("Is this particular test going to pass or is it going to fail? That is the question.", ["that", "the", "questions", "goes", "mountain", "passes", "passed", "going", "is"]) == [false, true, false, false, false, false, false, true, true])
+
+assert(multiStringSearchSecondSolution("Everything in this test should fail.", ["everything", "inn", "that", "testers", "shall", "failure"]) == [false, false, false, false, false, false])
