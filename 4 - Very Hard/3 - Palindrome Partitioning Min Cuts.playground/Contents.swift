@@ -1,6 +1,6 @@
 //Palindrome Partitioning Min Cuts
 //O(n^3) time | O(n^2) space
-func palindromePartitioingMinCuts(_ string: String) -> Int
+func palindromePartitioingMinCutsFirstSolution(_ string: String) -> Int
 {
     var palindromes = string.map { _ in return Array(repeating: false, count: string.count) }
     
@@ -63,14 +63,14 @@ func isPalindrome(_ string: String) -> Bool
     return true
 }
 
-assert(palindromePartitioingMinCuts("a") == 0)
-assert(palindromePartitioingMinCuts("abba") == 0)
-assert(palindromePartitioingMinCuts("abbba") == 0)
-assert(palindromePartitioingMinCuts("abb") == 1)
-assert(palindromePartitioingMinCuts("abbb") == 1)
-assert(palindromePartitioingMinCuts("noonabbad") == 2)
-assert(palindromePartitioingMinCuts("abcbm") == 2)
-assert(palindromePartitioingMinCuts("ababbbabbababa") == 3)
-assert(palindromePartitioingMinCuts("abbbacecffgbgffab") == 4)
-assert(palindromePartitioingMinCuts("abcdefghijklmonpqrstuvwxyz") == 25)
-assert(palindromePartitioingMinCuts("abcdefghijklmracecaronpqrstuvwxyz") == 26)
+assert(palindromePartitioingMinCutsFirstSolution("a") == 0)
+assert(palindromePartitioingMinCutsFirstSolution("abba") == 0)
+assert(palindromePartitioingMinCutsFirstSolution("abbba") == 0)
+assert(palindromePartitioingMinCutsFirstSolution("abb") == 1)
+assert(palindromePartitioingMinCutsFirstSolution("abbb") == 1)
+assert(palindromePartitioingMinCutsFirstSolution("noonabbad") == 2)
+assert(palindromePartitioingMinCutsFirstSolution("abcbm") == 2)
+assert(palindromePartitioingMinCutsFirstSolution("ababbbabbababa") == 3)
+assert(palindromePartitioingMinCutsFirstSolution("abbbacecffgbgffab") == 4)
+assert(palindromePartitioingMinCutsFirstSolution("abcdefghijklmonpqrstuvwxyz") == 25)
+assert(palindromePartitioingMinCutsFirstSolution("abcdefghijklmracecaronpqrstuvwxyz") == 26)
