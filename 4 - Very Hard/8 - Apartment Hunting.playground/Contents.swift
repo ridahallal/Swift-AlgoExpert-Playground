@@ -1,7 +1,7 @@
 //Apartment Hunting
 //Solution #1
 //O(b^2 * r) time | O(b) space
-func apartmentHunting(_ blocks: [[String: Bool]], _ requirements: [String]) -> Int
+func apartmentHuntingFirstSolution(_ blocks: [[String: Bool]], _ requirements: [String]) -> Int
 {
     //Array that will contain the max distance for each block
     var maxDistancesAtBlocks = Array(repeating: -Int.max, count: blocks.count)
@@ -33,6 +33,61 @@ func apartmentHunting(_ blocks: [[String: Bool]], _ requirements: [String]) -> I
     return getIndexAtMinValue(maxDistancesAtBlocks)
 }
 
+//Solution #2
+func apartmentHuntingSecondSolution(_ blocks: [[String: Bool]], _ requirements: [String]) -> Int
+{
+    let minDistancesFromBlocks = requirements.map { getMinDistances(blocks, $0) }
+    let maxDistancesAtBlocks = getMaxDistancesAtBlocks(blocks, minDistancesFromBlocks)
+    
+    return getIndexAtMinValue(maxDistancesAtBlocks)
+}
+
+func getMinDistances(_ blocks: [[String: Bool]], _ requirement: String) -> [Int]
+{
+    var minDistances = Array(repeating: -1, count: blocks.count)
+    var closestRequirementIndex = Int.max
+    
+    for i in 0 ..< blocks.count
+    {
+        if let requirementAvailable = blocks[i][requirement], requirementAvailable
+        {
+            closestRequirementIndex = i
+        }
+        
+        minDistances[i] = distanceBetween(i, closestRequirementIndex)
+    }
+    
+    for i in (0 ..< blocks.count).reversed()
+    {
+        if let requirementAvailable = blocks[i][requirement], requirementAvailable
+        {
+            closestRequirementIndex = i
+        }
+        
+        minDistances[i] = min(minDistances[i], distanceBetween(i, closestRequirementIndex))
+    }
+    
+    return minDistances
+}
+
+func getMaxDistancesAtBlocks(_ blocks: [[String: Bool]], _ minDistancesFromBlocks: [[Int]]) -> [Int]
+{
+    var maxDistancesAtBlocks = Array(repeating: -1, count: blocks.count)
+    
+    for i in 0 ..< blocks.count
+    {
+        let minDistancesAtBlock = minDistancesFromBlocks.map { $0[i] }
+        
+        if let max = minDistancesAtBlock.max()
+        {
+            maxDistancesAtBlocks[i] = max
+        }
+    }
+    
+    return maxDistancesAtBlocks
+}
+
+//Common Functions
 func getIndexAtMinValue(_ array: [Int]) -> Int
 {
     var indexAtMinValue = 0
@@ -87,7 +142,8 @@ let firstBlocks = [
     ]
 ]
 
-assert(apartmentHunting(firstBlocks, firstRequirements) == 3)
+assert(apartmentHuntingFirstSolution(firstBlocks, firstRequirements) == 3)
+assert(apartmentHuntingSecondSolution(firstBlocks, firstRequirements) == 3)
 
 let secondRequirements = ["gym", "office", "school", "store"]
 let secondBlocks = [
@@ -123,7 +179,8 @@ let secondBlocks = [
     ]
 ]
 
-assert(apartmentHunting(secondBlocks, secondRequirements) == 2)
+assert(apartmentHuntingFirstSolution(secondBlocks, secondRequirements) == 2)
+assert(apartmentHuntingSecondSolution(secondBlocks, secondRequirements) == 2)
 
 let thirdRequirements = ["gym", "office", "school", "store"]
 let thirdBlocks = [
@@ -165,7 +222,8 @@ let thirdBlocks = [
     ]
 ]
 
-assert(apartmentHunting(thirdBlocks, thirdRequirements) == 2)
+assert(apartmentHuntingFirstSolution(thirdBlocks, thirdRequirements) == 2)
+assert(apartmentHuntingSecondSolution(thirdBlocks, thirdRequirements) == 2)
 
 let fourthRequirements = ["gym", "school", "store"]
 let fourthBlocks = [
@@ -219,7 +277,8 @@ let fourthBlocks = [
     ]
 ]
 
-assert(apartmentHunting(fourthBlocks, fourthRequirements) == 4)
+assert(apartmentHuntingFirstSolution(fourthBlocks, fourthRequirements) == 4)
+assert(apartmentHuntingSecondSolution(fourthBlocks, fourthRequirements) == 4)
 
 let fifthRequirements = ["gym", "school", "store"]
 let fifthBlocks = [
@@ -275,7 +334,8 @@ let fifthBlocks = [
     ]
 ]
 
-assert(apartmentHunting(fifthBlocks, fifthRequirements) == 2)
+assert(apartmentHuntingFirstSolution(fifthBlocks, fifthRequirements) == 2)
+assert(apartmentHuntingSecondSolution(fifthBlocks, fifthRequirements) == 2)
 
 let sixthRequirements = ["gym", "pool", "school", "store"]
 let sixthBlocks = [
@@ -347,7 +407,8 @@ let sixthBlocks = [
     ]
 ]
 
-assert(apartmentHunting(sixthBlocks, sixthRequirements) == 7)
+assert(apartmentHuntingFirstSolution(sixthBlocks, sixthRequirements) == 7)
+assert(apartmentHuntingSecondSolution(sixthBlocks, sixthRequirements) == 7)
 
 let seventhRequirements = ["gym", "pool", "school", "store"]
 let seventhBlocks = [
@@ -430,4 +491,5 @@ let seventhBlocks = [
     ]
 ]
 
-assert(apartmentHunting(seventhBlocks, seventhRequirements) == 7)
+assert(apartmentHuntingFirstSolution(seventhBlocks, seventhRequirements) == 4)
+assert(apartmentHuntingSecondSolution(seventhBlocks, seventhRequirements) == 4)
