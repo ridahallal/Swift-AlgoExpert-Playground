@@ -15,7 +15,7 @@ func balancedBrackets(string: String) -> Bool
         }
         else
         {
-            if string.count == 0
+            if stack.count == 0
             {
                 return false
             }
