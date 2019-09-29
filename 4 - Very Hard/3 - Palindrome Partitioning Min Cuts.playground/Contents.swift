@@ -72,13 +72,7 @@ func palindromePartitioingMinCutsSecondSolution(_ string: String) -> Int
     
     for i in 0 ..< string.count
     {
-        for j in 0 ..< string.count
-        {
-            if i == j
-            {
-                palindromes[i][j] = true
-            }
-        }
+        palindromes[i][i] = true
     }
     
     for length in stride(from: 2, through: string.count, by: 1)
