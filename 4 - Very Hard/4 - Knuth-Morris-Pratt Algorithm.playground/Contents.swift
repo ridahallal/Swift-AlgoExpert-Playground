@@ -43,9 +43,9 @@ func doesMatch(_ string: String, _ subString: String, _ pattern: [Int]) -> Bool
     var i = 0
     var j = 0
     
-    while i + subString.count - j <= string.count
+    while i + (subString.count - j) <= string.count
     {
-        let iStringIndex = string.index(subString.startIndex, offsetBy: i)
+        let iStringIndex = string.index(string.startIndex, offsetBy: i)
         let jStringIndex = subString.index(subString.startIndex, offsetBy: j)
         
         if string[iStringIndex] == subString[jStringIndex]
