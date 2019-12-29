@@ -71,7 +71,7 @@ assert(twoNumberSumSecondSolution(array: [3, 5, -4, 8, 11, 1, -1, 6], targetSum:
 //O(nlog(n)) time | O(1) space
 func twoNumberSumThirdSolution(array: [Int], targetSum: Int) -> [Int]
 {
-    var array = array.sorted()
+    let array = array.sorted()
     
     var leftPointer = 0
     var rightPointer = array.count - 1
